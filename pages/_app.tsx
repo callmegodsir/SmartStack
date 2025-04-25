@@ -1,8 +1,30 @@
-import { SessionProvider } from 'next-auth/react';
-import Layout from '@/components/Layout';
-import '@/styles/globals.css';
+import { SessionProvider } from "next-auth/react";
+import Layout from "@/components/Layout";
+import "@/styles/globals.css";
+import { Inter, Playfair_Display, Space_Grotesk } from "next/font/google";
 
-import type { AppProps } from 'next/app';
+import type { AppProps } from "next/app";
+
+// Configure fonts
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const playfairDisplay = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-playfair-display",
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-space-grotesk",
+  display: "swap",
+});
 
 export default function App({
   Component,
@@ -15,19 +37,23 @@ export default function App({
 
   return (
     <SessionProvider session={session}>
-      {getLayout(
-        <>
-          <Layout>
-            {/* <Head>
-              <meta
-                name='viewport'
-                content='width=device-width, initial-scale=1'
-              />
-            </Head> */}
-            <Component {...pageProps} />
-          </Layout>
-        </>
-      )}
+      <div
+        className={`${inter.variable} ${playfairDisplay.variable} ${spaceGrotesk.variable} font-sans`}
+      >
+        {getLayout(
+          <>
+            <Layout>
+              {/* <Head>
+                <meta
+                  name='viewport'
+                  content='width=device-width, initial-scale=1'
+                />
+              </Head> */}
+              <Component {...pageProps} />
+            </Layout>
+          </>
+        )}
+      </div>
     </SessionProvider>
   );
 }

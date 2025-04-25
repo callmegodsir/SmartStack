@@ -1,110 +1,105 @@
-import { useRef, useState } from 'react';
-import { FAQItem } from '@/types';
+"use client";
 
-// <FAQ> component is a lsit of <Item> component
-// Just import the FAQ & add your FAQ content to the const faqList
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
-const faqList: FAQItem[] = [
-  {
-    question: 'What do I get exactly?',
-    answer: <div className='space-y-2 leading-relaxed'>Loreum Ipseum</div>,
-  },
-  {
-    question: 'Can I get a refund?',
-    answer: (
-      <p>
-        Yes! You can request a refund within 7 days of your purchase. Reach out
-        by email.
-      </p>
-    ),
-  },
-  {
-    question: 'I have another question',
-    answer: (
-      <div className='space-y-2 leading-relaxed'>Cool, contact us by email</div>
-    ),
-  },
-];
-
-const Item = ({ item }: { item: FAQItem }) => {
-  const accordion = useRef(null);
+const FaqItem = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <li>
+    <motion.div
+      initial={false}
+      animate={{ backgroundColor: isOpen ? "#FFF7ED" : "#FFFFFF" }}
+      transition={{ duration: 0.3 }}
+      className="border-b border-gray-200"
+    >
       <button
-        className='relative flex gap-2 items-center w-full py-5 text-base font-semibold text-left border-t md:text-lg border-base-content/10'
-        onClick={(e) => {
-          e.preventDefault();
-          setIsOpen(!isOpen);
-        }}
+        className="flex justify-between items-center w-full py-5 px-6 text-left text-lg font-medium focus:outline-none"
+        onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
       >
-        <span
-          className={`flex-1 text-base-content ${isOpen ? 'text-primary' : ''}`}
-        >
-          {item?.question}
-        </span>
-        <svg
-          className={`flex-shrink-0 w-4 h-4 ml-auto fill-current`}
-          viewBox='0 0 16 16'
-          xmlns='http://www.w3.org/2000/svg'
-        >
-          <rect
-            y='7'
-            width='16'
-            height='2'
-            rx='1'
-            className={`transform origin-center transition duration-200 ease-out ${
-              isOpen && 'rotate-180'
-            }`}
-          />
-          <rect
-            y='7'
-            width='16'
-            height='2'
-            rx='1'
-            className={`transform origin-center rotate-90 transition duration-200 ease-out ${
-              isOpen && 'rotate-180 hidden'
-            }`}
-          />
-        </svg>
+        <span>{question}</span>
+        {isOpen ? (
+          <ChevronUp className="text-orange-500" size={24} />
+        ) : (
+          <ChevronDown className="text-gray-500" size={24} />
+        )}
       </button>
-
-      <div
-        ref={accordion}
-        className={`transition-all duration-300 ease-in-out opacity-80 overflow-hidden`}
-        style={
-          isOpen
-            ? { maxHeight: accordion?.current?.scrollHeight, opacity: 1 }
-            : { maxHeight: 0, opacity: 0 }
-        }
+      <motion.div
+        initial={false}
+        animate={{
+          height: isOpen ? "auto" : 0,
+          opacity: isOpen ? 1 : 0,
+          marginTop: isOpen ? "0px" : "-10px",
+        }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        style={{ overflow: "hidden" }}
+        className="px-6"
       >
-        <div className='pb-5 leading-relaxed'>{item?.answer}</div>
-      </div>
-    </li>
+        {isOpen && <p className="pb-5 text-gray-600">{answer}</p>}
+      </motion.div>
+    </motion.div>
   );
 };
 
-const FAQ = () => {
-  return (
-    <section className='bg-base-200' id='faq'>
-      <div className='py-24 px-8 max-w-7xl mx-auto flex flex-col md:flex-row gap-12'>
-        <div className='flex flex-col text-left basis-1/2'>
-          <p className='inline-block font-semibold text-primary mb-4'>FAQ</p>
-          <p className='sm:text-4xl text-3xl font-extrabold text-base-content'>
-            Frequently Asked Questions
-          </p>
-        </div>
+export default function FAQ() {
+  const faqData = [
+    {
+      question: "How do automatic reminders work?",
+      answer:
+        "You define rules (e.g., 15 days after the due date), and LoopBill automatically sends a personalized reminder email to your client if the invoice isn't marked as paid.",
+    },
+    {
+      question: "Can I customize my invoices?",
+      answer:
+        "Yes! Depending on your plan, you can add your logo, choose colors, and even customize certain fields to match your brand identity.",
+    },
+    {
+      question: "What payment methods are accepted for the subscription?",
+      answer:
+        "We accept major credit cards (Visa, Mastercard, American Express) through our secure payment partner, Stripe.",
+    },
+    {
+      question: "Is bank connection possible?",
+      answer:
+        "Bank integration is not available at the moment but is on our roadmap. Currently, you can manually mark invoices as paid.",
+    },
+    {
+      question: "Is my data secure?",
+      answer:
+        "Absolutely. Your data security is our priority. We use encrypted connections (HTTPS), secure databases, and follow best security practices.",
+    },
+  ];
 
-        <ul className='basis-1/2'>
-          {faqList.map((item, i) => (
-            <Item key={i} item={item} />
+  return (
+    <section id="faq" className="py-20 bg-white">
+      <div className="container mx-auto px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-3xl font-bold mb-4">Frequently Asked Questions</h2>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Got questions? We've got answers.
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="max-w-3xl mx-auto bg-white rounded-lg shadow-md overflow-hidden"
+        >
+          {faqData.map((item, index) => (
+            <FaqItem key={index} question={item.question} answer={item.answer} />
           ))}
-        </ul>
+        </motion.div>
       </div>
     </section>
   );
-};
-
-export default FAQ;
+}
