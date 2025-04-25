@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+
 import { ArrowRight, Check } from 'lucide-react'
 
 export default function GetFreeTrial() {
@@ -35,23 +35,7 @@ export default function GetFreeTrial() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="lg:w-1/2 bg-white p-8 rounded-lg shadow-md"
           >
-            <form className="space-y-4">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                <Input type="text" id="name" placeholder="John Doe" required />
-              </div>
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Work Email</label>
-                <Input type="email" id="email" placeholder="john@company.com" required />
-              </div>
-              <div>
-                <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
-                <Input type="text" id="company" placeholder="Acme Inc." required />
-              </div>
-              <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white">
-                Start Your Free Trial <ArrowRight className="ml-2" size={16} />
-              </Button>
-            </form>
+            
             <p className="text-sm text-gray-500 mt-4 text-center">
               By signing up, you agree to our Terms of Service and Privacy Policy.
             </p>

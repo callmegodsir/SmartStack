@@ -90,7 +90,7 @@ export default function MultipleTestimonials() {
                 </span>
               </div>
               <p className="italic text-gray-700 mb-4 flex-grow font-serif">
-                "{testimonial.quote}"
+                &quot;{testimonial.quote}&quot;
               </p>
               <div>
                 <p className="font-semibold text-lg">{testimonial.name}</p>

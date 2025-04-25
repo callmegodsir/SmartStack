@@ -1,19 +1,24 @@
 "use client";
 
-import { motion } from "framer-motion";
+// Notez que nous n'importons pas framer-motion car il n'est pas disponible dans cet environnement
+// Si vous utilisez réellement framer-motion dans votre projet, gardez l'import
 
 export default function DemoVideo() {
-  // Replace with your hosted video URL (e.g., S3, Cloudinary, Vimeo)
-  const videoSrc = "/placeholder-demo.mp4"; // Ensure you have a placeholder video in /public
+  // Remplacez ceci par l'ID réel de votre vidéo YouTube
+  // Par exemple, pour https://www.youtube.com/watch?v=dQw4w9WgXcQ, l'ID est "dQw4w9WgXcQ"
+  const youtubeVideoId = "dQw4w9WgXcQ"; // Utilisez votre véritable ID de vidéo YouTube ici
+  
+  // Paramètres pour l'autoplay et autres options:
+  // autoplay=1 : lance la vidéo automatiquement
+  // mute=1 : nécessaire pour l'autoplay sur la plupart des navigateurs
+  // loop=1&playlist={id} : fait boucler la vidéo
+  // controls=0 : cache les contrôles (remplacer par 1 pour les afficher)
+  const embedUrl = `https://www.youtube.com/embed/${youtubeVideoId}?autoplay=1&mute=1&loop=1&playlist=${youtubeVideoId}&controls=1&modestbranding=1&rel=0`;
 
   return (
     <section id="demo" className="py-20 bg-gray-900 text-white">
       <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+        <div 
           className="text-center mb-12"
         >
           <h2 className="text-3xl font-bold mb-4">See LoopBill in Action</h2>
@@ -21,36 +26,21 @@ export default function DemoVideo() {
             Discover how to create, send, and track an invoice in under 60
             seconds.
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
+        <div 
           className="max-w-4xl mx-auto bg-black rounded-lg overflow-hidden shadow-xl aspect-video"
         >
-          {/* 
-            Notes on autoplay:
-            - Usually works best with the `muted` attribute.
-            - Some browsers might block autoplay under certain conditions.
-            - `playsInline` is useful for mobile devices.
-          */}
-          <video
-            className="w-full h-full object-cover"
-            src={videoSrc}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          >
-            Your browser does not support the video tag.
-            <a href={videoSrc} download>
-              Download the video
-            </a>
-          </video>
-        </motion.div>
+          <iframe
+            className="w-full h-full"
+            src={embedUrl}
+            title="LoopBill Demo Video"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          ></iframe>
+        </div>
       </div>
     </section>
   );

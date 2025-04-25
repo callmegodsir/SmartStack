@@ -20,9 +20,9 @@ export default function SingleTestimonial() {
         >
           <div className="md:w-2/3 md:pr-8 text-center md:text-left mb-6 md:mb-0">
             <p className="text-2xl italic text-gray-700 mb-6">
-              "Since using LoopBill, I spend less than 5 minutes a week on
+              &quot;Since using LoopBill, I spend less than 5 minutes a week on
               invoicing, down from several hours before. The automatic reminders
-              have reduced my overdue payments by 70%!"
+              have reduced my overdue payments by 70%!&quot;
             </p>
             <div className="flex items-center justify-center md:justify-start">
               <Image

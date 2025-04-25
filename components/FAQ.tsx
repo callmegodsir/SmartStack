@@ -1,10 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
-const FaqItem = ({ question, answer }) => {
+// Define types for FaqItem props
+interface FaqItemProps {
+  question: string;
+  answer: string;
+}
+
+const FaqItem: React.FC<FaqItemProps> = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -44,11 +50,12 @@ const FaqItem = ({ question, answer }) => {
 };
 
 export default function FAQ() {
+  // English FAQ Data with escaped apostrophes
   const faqData = [
     {
       question: "How do automatic reminders work?",
       answer:
-        "You define rules (e.g., 15 days after the due date), and LoopBill automatically sends a personalized reminder email to your client if the invoice isn't marked as paid.",
+        "You define rules (e.g., 15 days after the due date), and LoopBill automatically sends a personalized reminder email to your client if the invoice isn&apos;t marked as paid.",
     },
     {
       question: "Can I customize my invoices?",
@@ -82,9 +89,11 @@ export default function FAQ() {
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl font-bold mb-4">Frequently Asked Questions</h2>
+          <h2 className="text-3xl font-bold mb-4">
+            Frequently Asked Questions
+          </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Got questions? We've got answers.
+            Got questions? We&apos;ve got answers.
           </p>
         </motion.div>
 
@@ -96,7 +105,11 @@ export default function FAQ() {
           className="max-w-3xl mx-auto bg-white rounded-lg shadow-md overflow-hidden"
         >
           {faqData.map((item, index) => (
-            <FaqItem key={index} question={item.question} answer={item.answer} />
+            <FaqItem
+              key={index}
+              question={item.question}
+              answer={item.answer}
+            />
           ))}
         </motion.div>
       </div>
