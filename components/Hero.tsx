@@ -5,8 +5,14 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight, PlayCircle } from "lucide-react";
 import Image from "next/image";
 import dashboard from "@/public/dashboard.png";
+import { useState, useEffect } from "react";
+import EmailPopup from "./EmailPopup";
 
 export default function Hero() {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+
+
   return (
     <section className="pt-40 pb-20 bg-gradient-to-b from-white to-orange-50">
       <div className="container mx-auto px-4">
@@ -26,8 +32,8 @@ export default function Hero() {
               and follow up on invoices. Say goodbye to late payments!
             </p>
             <div className="flex flex-col sm:flex-row justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
-              <Button className="bg-orange-500 hover:bg-orange-600 text-white text-lg px-8 py-3">
-                Start 14-Day Free Trial <ChevronRight className="ml-2" />
+              <Button className="bg-orange-500 hover:bg-orange-600 text-white text-lg px-8 py-3" onClick={() => setIsPopupOpen(true)} id="keepInTouch">
+                Keep in touch !
               </Button>
               <Button
                 variant="outline"
@@ -53,6 +59,13 @@ export default function Hero() {
             />
           </motion.div>
         </div>
+        
+        <EmailPopup 
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+      />
+
+      
       </div>
     </section>
   );

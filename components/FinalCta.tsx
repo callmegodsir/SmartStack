@@ -3,8 +3,13 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
+import EmailPopup from "./EmailPopup";
+import { useState, useEffect } from "react";
 
 export default function FinalCta() {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+
   return (
     <section
       id="cta-final"
@@ -24,11 +29,15 @@ export default function FinalCta() {
             Join hundreds of professionals automating their invoicing with
             LoopBill. Try it free for 14 days, no commitment.
           </p>
-          <Button className="bg-white text-orange-600 hover:bg-gray-100 text-lg px-10 py-4 font-semibold">
-            Start My Free Trial <ChevronRight className="ml-2" />
+          <Button className="bg-white text-orange-600 hover:bg-gray-100 text-lg px-10 py-4 font-semibold" onClick={() => setIsPopupOpen(true)}>
+           Keep in touch <ChevronRight className="ml-2" />
           </Button>
         </motion.div>
       </div>
+      <EmailPopup 
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+      />
     </section>
   );
 }
