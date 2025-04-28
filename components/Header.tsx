@@ -24,7 +24,7 @@ export default function Header() {
   
   
 
-  // Common props for ScrollLink to avoid repetition
+  //  Common props for ScrollLink to avoid repetition
   const scrollLinkProps = {
     smooth: true,
     duration: 500,
