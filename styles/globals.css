@@ -1,4 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-  
+
+.notification-ios-font {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell;
+    letter-spacing: -0.01em;
+  }

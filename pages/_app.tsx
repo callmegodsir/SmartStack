@@ -2,7 +2,7 @@ import { SessionProvider } from "next-auth/react";
 import Layout from "@/components/Layout";
 import "@/styles/globals.css";
 import { Inter, Playfair_Display, Space_Grotesk } from "next/font/google";
-
+import { NotificationProvider } from '../components/NotificationSystem';
 import type { AppProps } from "next/app";
 
 // Configure fonts
@@ -43,13 +43,10 @@ export default function App({
         {getLayout(
           <>
             <Layout>
-              {/* <Head>
-                <meta
-                  name='viewport'
-                  content='width=device-width, initial-scale=1'
-                />
-              </Head> */}
+            <NotificationProvider position="top-right" maxNotifications={5}>
+              
               <Component {...pageProps} />
+              </NotificationProvider>
             </Layout>
           </>
         )}

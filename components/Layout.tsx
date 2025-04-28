@@ -31,7 +31,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       `}</style>
       {/* Automatically show a progress bar at the top when navigating between pages */}
       <NextNProgress
-        color={config.colors.main}
+        color='gray-800'
         options={{ showSpinner: false }}
       />
       {children}

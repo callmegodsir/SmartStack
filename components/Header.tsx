@@ -8,6 +8,8 @@ import { Link as ScrollLink } from "react-scroll";
 import Image from "next/image";
 import { Menu, X, Construction, LogOut, LogIn } from "lucide-react";
 import logo from "@/public/logo.png";
+
+import EmailPopup from "./EmailPopup";
 import { useSession, signOut } from "next-auth/react";
 
 export default function Header() {
@@ -16,6 +18,11 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { scrollY } = useScroll();
   const controls = useAnimation();
+
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  
+  
 
   // Common props for ScrollLink to avoid repetition
   const scrollLinkProps = {
@@ -104,6 +111,10 @@ export default function Header() {
               </li>
             </ul>
           </nav>
+          <div className="hidden md:block">
+            <Button className="bg-orange-500 hover:bg-orange-600 text-white" onClick={() => setIsPopupOpen(true)}>
+              Keep in touch
+            </Button>
 
           {/* Auth Buttons / User Info */}
           <div className="hidden md:flex items-center space-x-2 flex-shrink-0">
@@ -201,8 +212,13 @@ export default function Header() {
               )}
             </ul>
           </nav>
-        </div>
-      )}
+        </div>)}
+      </div>
+      
+      <EmailPopup 
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+      />
     </motion.header>
   );
 }

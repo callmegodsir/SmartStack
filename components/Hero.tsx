@@ -1,17 +1,23 @@
 "use client";
 
-import { useEffect } from "react";
+
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, PlayCircle } from "lucide-react";
 import Image from "next/image";
-import dashboard from "@/public/heroimage.png";
+import dashboard from "@/public/dashboard.png";
+import { useState, useEffect } from "react";
+import EmailPopup from "./EmailPopup";
 import {
   useNotifications,
   NotificationAppType,
 } from "../components/NotificationSystem";
 
 export default function Hero() {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+
+
   // Récupérer showNotification ET clearNotifications
   const { showNotification, clearNotifications } = useNotifications();
 
@@ -90,8 +96,8 @@ export default function Hero() {
               and follow up on invoices. Say goodbye to late payments!
             </p>
             <div className="flex flex-col sm:flex-row justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
-              <Button className="bg-orange-500 hover:bg-orange-600 text-white text-lg px-8 py-3">
-                Start 14-Day Free Trial <ChevronRight className="ml-2" />
+              <Button className="bg-orange-500 hover:bg-orange-600 text-white text-lg px-8 py-3" onClick={() => setIsPopupOpen(true)} id="keepInTouch">
+                Keep in touch !
               </Button>
               <Button
                 variant="outline"
@@ -117,6 +123,13 @@ export default function Hero() {
             />
           </motion.div>
         </div>
+        
+        <EmailPopup 
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+      />
+
+      
       </div>
     </section>
   );

@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient } from "mongodb";
 // This lib is use just to connect to the database in next-auth. We don't use it anywhere else in the API routes. See [...nextauth].js file.
 
 declare global {
@@ -11,20 +11,32 @@ if (!process.env.MONGODB_URI) {
 }
 
 const uri = process.env.MONGODB_URI;
-const options = {};
+let client: MongoClient;
+let clientPromise: Promise<MongoClient>;
 
-let client: MongoClient | undefined;
-let clientPromise: Promise<MongoClient> | undefined;
+if (process.env.NODE_ENV === "development") {
+  // En développement, utilisez une variable globale pour préserver la valeur
+  // entre les rechargements à chaud (hot module replacement).
+  let globalWithMongo = global as typeof globalThis & {
+    _mongoClientPromise?: Promise<MongoClient>;
+  };
 
-if (process.env.NODE_ENV === 'development') {
-  if (!global._mongoClientPromise) {
-    client = new MongoClient(uri, options);
-    global._mongoClientPromise = client.connect();
+  if (!globalWithMongo._mongoClientPromise) {
+    client = new MongoClient(uri);
+    globalWithMongo._mongoClientPromise = client.connect();
   }
-  clientPromise = global._mongoClientPromise;
+  clientPromise = globalWithMongo._mongoClientPromise;
 } else {
-  client = new MongoClient(uri, options);
+  // En production, il est préférable de ne pas utiliser de variable globale.
+  client = new MongoClient(uri);
   clientPromise = client.connect();
 }
 
-export default clientPromise;
+// Exportez une promesse de MongoClient. Ceci sera utilisé par l'adaptateur.
+export default clientPromise; // <= C'est ce que MongoDBAdapter attend
+
+// Optionnel: une fonction helper pour obtenir la DB si besoin ailleurs
+// export async function getDb() {
+//    const client = await clientPromise;
+//    return client.db(); // Ajoutez le nom de votre DB si nécessaire
+// }

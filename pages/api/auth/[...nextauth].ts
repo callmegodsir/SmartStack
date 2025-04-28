@@ -1,24 +1,24 @@
-import NextAuth from 'next-auth';
-import type { NextAuthOptions } from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
-import EmailProvider from 'next-auth/providers/email';
-import { MongoDBAdapter } from '@auth/mongodb-adapter';
-import connectMongo from '@/libs/mongo';
-import config from '@/config';
+import NextAuth from "next-auth";
+import type { NextAuthOptions } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import EmailProvider from "next-auth/providers/email";
+import { MongoDBAdapter } from "@auth/mongodb-adapter";
+import connectMongo from "@/libs/mongo";
+import config from "@/config";
+import { Resend } from "resend";
 
 interface NextAuthOptionsExtended extends NextAuthOptions {
   adapter: any;
 }
 
-export const authOptions: NextAuthOptionsExtended = {
-  // Set any random key in .env.local
-  secret: process.env.NEXTAUTH_SECRET,
+const resend = new Resend(process.env.RESEND_API_KEY);
 
+export const authOptions: NextAuthOptionsExtended = {
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     GoogleProvider({
-      // Follow the "Login with Google" tutorial to get your credentials
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET,
+      clientId: process.env.GOOGLE_ID as string,
+      clientSecret: process.env.GOOGLE_SECRET as string,
       async profile(profile) {
         return {
           id: profile.sub,
@@ -29,14 +29,29 @@ export const authOptions: NextAuthOptionsExtended = {
         };
       },
     }),
-    // Follow the "Login with Email" tutorial to set up your email server
     EmailProvider({
-      server: process.env.EMAIL_SERVER,
-      from: config.mailgun.fromNoReply,
+      maxAge: 24 * 60 * 60,
+      async sendVerificationRequest({ identifier: email, url, provider }) {
+        try {
+          const { data, error } = await resend.emails.send({
+            from: config.mailgun.fromNoReply,
+            to: [email],
+            subject: `Sign in to LoopBill`,
+            html: `<p>Click the magic link below to sign in to your account:</p>\n<p><a href="${url}"><b>Sign In</b></a></p>`,
+          });
+
+          if (error) {
+            console.error("Resend Error:", error);
+            throw new Error(`Email could not be sent: ${error.message}`);
+          }
+        } catch (error) {
+          console.error("Failed to send verification email:", error);
+          throw new Error("Failed to send verification email.");
+        }
+      },
     }),
   ],
-  // New users will be saved in Database (MongoDB Atlas). Each user (model) has some fields like name, email, image, etc.. Learn more about the model type: https://next-auth.js.org/v3/adapters/models
-  adapter: MongoDBAdapter(connectMongo),
+  adapter: MongoDBAdapter(connectMongo as any),
   callbacks: {
     session: async ({ session, token }) => {
       if (session?.user) {
@@ -46,12 +61,10 @@ export const authOptions: NextAuthOptionsExtended = {
     },
   },
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
   },
   theme: {
     brandColor: config.colors.main,
-    // Add you own logo below. Recommended size is rectangle (i.e. 200x50px) and show your logo + name.
-    // It will be used in the login flow to display your logo. If you don't add it, it will look faded.
     logo: `https://${config.domainName}/logoAndName.png`,
   },
 };
