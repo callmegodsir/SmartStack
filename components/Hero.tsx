@@ -1,14 +1,75 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, PlayCircle } from "lucide-react";
 import Image from "next/image";
-import dashboard from "@/public/dashboard.png";
+import dashboard from "@/public/heroimage.png";
+import {
+  useNotifications,
+  NotificationAppType,
+} from "../components/NotificationSystem";
 
 export default function Hero() {
+  // Récupérer showNotification ET clearNotifications
+  const { showNotification, clearNotifications } = useNotifications();
+
+  useEffect(() => {
+    // Données des notifications à afficher
+    const notificationsToShow = [
+      {
+        appType: "gmail" as NotificationAppType,
+        title: "Pierre Quiroule",
+        message: "Add VAT to invoice now!",
+        timeAgo: "1m",
+        duration: 6000,
+      },
+      {
+        appType: "whatsapp" as NotificationAppType,
+        title: "Rappel RDV",
+        message: "Votre coiffeur demain à 10h.",
+        timeAgo: "5m",
+        duration: 6000,
+      },
+      {
+        appType: "stripe" as NotificationAppType,
+        title: "Paiement reçu",
+        message: "Facture #2024-07A payée (150€)",
+        timeAgo: "1h",
+        duration: 6000,
+      },
+      {
+        appType: "mcdonalds" as NotificationAppType,
+        title: "Your order just arrived!",
+        message: "It's your 13th BigMama order this month! 🍔",
+        timeAgo: "now",
+        duration: 6000,
+      },
+    ];
+
+    // Créer les timeouts pour afficher les notifications séquentiellement
+    const timeouts = notificationsToShow.map(
+      (notification, i) =>
+        setTimeout(
+          () => {
+            // Vérifier si le composant est toujours monté (bonne pratique, même si ici le cleanup gère)
+            showNotification(notification);
+          },
+          2000 * (i + 1)
+        ) // Délai entre chaque notification (ex: 2 secondes)
+    );
+
+    // Fonction de nettoyage qui s'exécute lorsque le composant Hero est démonté
+    return () => {
+      // 1. Annuler tous les timeouts qui n'ont pas encore été déclenchés
+      timeouts.forEach(clearTimeout);
+      // 2. Effacer toutes les notifications actuellement affichées
+      clearNotifications();
+    };
+  }, []);
   return (
-    <section className="pt-40 pb-20 bg-gradient-to-b from-white to-orange-50">
+    <section className="pt-40 pb-20 bg-gradient-to-b from-white to-orange-50 relative">
       <div className="container mx-auto px-4">
         <div className="flex flex-col lg:flex-row items-center">
           <motion.div
@@ -18,7 +79,10 @@ export default function Hero() {
             className="lg:w-1/2 text-center lg:text-left mb-10 lg:mb-0"
           >
             <h1 className="text-5xl font-bold mb-6">
-              <span className="font-grotesk"><span className="font-serif">Automate </span> Your Invoicing, <br /> Get   </span>
+              <span className="font-grotesk">
+                <span className="font-serif">Automate </span> Your Invoicing,{" "}
+                <br /> Get{" "}
+              </span>
               <span className="font-serif"> Paid Faster</span>
             </h1>
             <p className="text-xl mb-8 max-w-2xl mx-auto lg:mx-0">

@@ -4,29 +4,54 @@ import { useState, useEffect } from "react";
 import { motion, useScroll, useAnimation } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Link as ScrollLink } from "react-scroll";
 import Image from "next/image";
-import { Menu, X, Construction } from "lucide-react";
+import { Menu, X, Construction, LogOut, LogIn } from "lucide-react";
 import logo from "@/public/logo.png";
+import { useSession, signOut } from "next-auth/react";
 
 export default function Header() {
+  const { data: session, status } = useSession();
   const [isSticky, setIsSticky] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { scrollY } = useScroll();
   const controls = useAnimation();
 
+  // Common props for ScrollLink to avoid repetition
+  const scrollLinkProps = {
+    smooth: true,
+    duration: 500,
+    spy: true, // Optional: highlights the link when scrolling to the section
+    offset: -100, // Adjust this value based on your sticky header height + banner
+    className: "hover:text-orange-500 transition-colors cursor-pointer", // Added cursor-pointer
+  };
+
+  // Mobile specific props
+  const mobileScrollLinkProps = {
+    ...scrollLinkProps,
+    className:
+      "block py-2 hover:text-orange-500 transition-colors cursor-pointer", // Mobile specific classes
+    onClick: () => setIsMobileMenuOpen(false), // Close menu on click
+  };
+
   useEffect(() => {
     const unsubscribe = scrollY.onChange((latest) => {
-      if (latest > 50) {
-        setIsSticky(true);
-        controls.start({ y: 0 });
-      } else {
-        setIsSticky(false);
-        controls.start({ y: 0 });
+      // Adjust offset based on sticky state if needed, more complex logic
+      // For simplicity, using a fixed offset that accounts for the tallest state (banner + header)
+      const newIsSticky = latest > 50;
+      if (newIsSticky !== isSticky) {
+        setIsSticky(newIsSticky);
+        controls.start({ y: 0 }); // Keep controls logic if needed for other animations
       }
     });
 
     return () => unsubscribe();
-  }, [scrollY, controls]);
+    // Removed controls from dependency array if not strictly needed for offset calculation
+  }, [scrollY, isSticky]);
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [status]);
 
   return (
     <motion.header
@@ -39,62 +64,85 @@ export default function Header() {
       {/* Orange top banner */}
       <div className="w-full bg-orange-500 text-white py-2 text-center text-sm flex items-center justify-center space-x-2">
         <Construction size={16} className="text-yellow-400" />
-        <span>
-          LoopBill is recent. Get the early adopter price!
-        </span>
+        <span>LoopBill is new. Get the early adopter price!</span>
       </div>
 
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
+          {/* Logo */}
           <Link
             href="/"
-            className="flex items-center space-x-2"
+            className="flex items-center space-x-2 flex-shrink-0"
             title="LoopBill Home"
           >
             <Image src={logo} alt="LoopBill Logo" width={32} height={32} />
             <span className="text-2xl font-bold text-orange-500">LoopBill</span>
           </Link>
-          <nav className="hidden md:block">
+
+          {/* Navigation Links - Centered */}
+          <nav className="hidden md:flex flex-grow justify-center">
             <ul className="flex space-x-6">
               <li>
-                <Link
-                  href="#features"
-                  className="hover:text-orange-500 transition-colors"
-                >
+                <ScrollLink to="features" {...scrollLinkProps}>
                   Features
-                </Link>
+                </ScrollLink>
               </li>
               <li>
-                <Link
-                  href="#pricing"
-                  className="hover:text-orange-500 transition-colors"
-                >
+                <ScrollLink to="pricing" {...scrollLinkProps}>
                   Pricing
-                </Link>
+                </ScrollLink>
               </li>
               <li>
-                <Link
-                  href="#testimonials"
-                  className="hover:text-orange-500 transition-colors"
-                >
+                <ScrollLink to="testimonials" {...scrollLinkProps}>
                   Testimonials
-                </Link>
+                </ScrollLink>
               </li>
               <li>
-                <Link
-                  href="#faq"
-                  className="hover:text-orange-500 transition-colors"
-                >
+                <ScrollLink to="faq" {...scrollLinkProps}>
                   FAQ
-                </Link>
+                </ScrollLink>
               </li>
             </ul>
           </nav>
-          <div className="hidden md:block">
-            <Button className="bg-orange-500 hover:bg-orange-600 text-white">
-              Start Free Trial
-            </Button>
+
+          {/* Auth Buttons / User Info */}
+          <div className="hidden md:flex items-center space-x-2 flex-shrink-0">
+            {status === "authenticated" ? (
+              <div className="flex items-center space-x-2">
+                {session.user?.image && (
+                  <Image
+                    src={session.user.image}
+                    alt={session.user.name || "User avatar"}
+                    width={32}
+                    height={32}
+                    className="rounded-full"
+                  />
+                )}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => signOut()}
+                  title="Sign Out"
+                  className="hover:text-orange-500"
+                >
+                  <LogOut size={20} />
+                </Button>
+              </div>
+            ) : status === "loading" ? (
+              <div className="w-8 h-8"></div>
+            ) : (
+              <Link href="/login">
+                <Button
+                  variant="outline"
+                  className="text-orange-500 border-orange-500 hover:bg-orange-50"
+                >
+                  <LogIn size={16} className="mr-2" />
+                  Login
+                </Button>
+              </Link>
+            )}
           </div>
+
           <button
             className="md:hidden text-gray-700 hover:text-orange-500"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -110,46 +158,47 @@ export default function Header() {
           <nav className="container mx-auto px-4 py-4">
             <ul className="space-y-4">
               <li>
-                <Link
-                  href="#features"
-                  className="block py-2 hover:text-orange-500 transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
+                <ScrollLink to="features" {...mobileScrollLinkProps}>
                   Features
-                </Link>
+                </ScrollLink>
               </li>
               <li>
-                <Link
-                  href="#pricing"
-                  className="block py-2 hover:text-orange-500 transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
+                <ScrollLink to="pricing" {...mobileScrollLinkProps}>
                   Pricing
-                </Link>
+                </ScrollLink>
               </li>
               <li>
-                <Link
-                  href="#testimonials"
-                  className="block py-2 hover:text-orange-500 transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
+                <ScrollLink to="testimonials" {...mobileScrollLinkProps}>
                   Testimonials
-                </Link>
+                </ScrollLink>
               </li>
               <li>
-                <Link
-                  href="#faq"
-                  className="block py-2 hover:text-orange-500 transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
+                <ScrollLink to="faq" {...mobileScrollLinkProps}>
                   FAQ
-                </Link>
+                </ScrollLink>
               </li>
-              <li>
-                <Button className="w-full mt-4 bg-orange-500 hover:bg-orange-600 text-white">
-                  Start Free Trial
-                </Button>
-              </li>
+              {status === "authenticated" ? (
+                <li>
+                  <Button
+                    className="w-full mt-4 bg-gray-600 hover:bg-gray-700 text-white"
+                    onClick={() => signOut()}
+                  >
+                    <LogOut size={16} className="mr-2" />
+                    Sign Out
+                  </Button>
+                </li>
+              ) : status === "loading" ? (
+                <li>{/* Optional: Loading state */}</li>
+              ) : (
+                <li>
+                  <Link href="/login">
+                    <Button className="w-full mt-4 bg-orange-500 hover:bg-orange-600 text-white">
+                      <LogIn size={16} className="mr-2" />
+                      Login
+                    </Button>
+                  </Link>
+                </li>
+              )}
             </ul>
           </nav>
         </div>
