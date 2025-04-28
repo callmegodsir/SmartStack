@@ -56,12 +56,12 @@ export default function EmailPopup({ isOpen , onClose } : any) {
       
       <div className="text-center mb-6">
         <h2 className="text-2xl font-bold mb-2 text-black">Want to see more ?</h2>
-        <p className="text-gray-600">Send us your email and we'll contact soon with an invite to be part of <b>beta-tester</b></p>
+        <p className="text-gray-600">Send us your email and we&apos;ll contact soon with an invite to be part of <b>beta-tester</b></p>
       </div>
 
       {isSuccess ? (
         <div className="bg-[#F97316] p-4 rounded text-center mb-4">
-          <p className="text-white">Thank you, we'll contact you very soon with detailed informations !</p>
+          <p className="text-white">Thank you, we&apos;ll contact you very soon with detailed informations !</p>
         </div>
       ) : (
         <form onSubmit={handleSubmit}>
