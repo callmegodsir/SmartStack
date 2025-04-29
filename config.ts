@@ -2,7 +2,7 @@ import themes from "daisyui/src/theming/themes.js";
 
 const config = {
   // REQUIRED
-  appName: "ShipFast",
+  appName: "LoopBill",
   // REQUIRED (no https://, not trialing slash at the end, just the naked domain)
   domainName: "shipfa.st",
 

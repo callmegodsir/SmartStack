@@ -43,7 +43,7 @@ export default function App({
         {getLayout(
           <>
             <Layout>
-            <NotificationProvider position="top-right" maxNotifications={5}>
+            <NotificationProvider position="top-right" maxNotifications={3}>
               
               <Component {...pageProps} />
               </NotificationProvider>

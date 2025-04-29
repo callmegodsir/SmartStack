@@ -86,7 +86,7 @@ export default function Hero() {
           >
             <h1 className="text-5xl font-bold mb-6">
               <span className="font-grotesk">
-                <span className="font-serif">Automate </span> Your Invoicing,{" "}
+               Automate Your  <span className="font-serif">Invoicing, </span>{" "}
                 <br /> Get{" "}
               </span>
               <span className="font-serif"> Paid Faster</span>

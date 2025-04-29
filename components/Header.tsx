@@ -21,9 +21,6 @@ export default function Header() {
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  
-  
-
   //  Common props for ScrollLink to avoid repetition
   const scrollLinkProps = {
     smooth: true,
@@ -85,7 +82,6 @@ export default function Header() {
             <Image src={logo} alt="LoopBill Logo" width={32} height={32} />
             <span className="text-2xl font-bold text-orange-500">LoopBill</span>
           </Link>
-
           {/* Navigation Links - Centered */}
           <nav className="hidden md:flex flex-grow justify-center">
             <ul className="flex space-x-6">
@@ -111,59 +107,70 @@ export default function Header() {
               </li>
             </ul>
           </nav>
-          <div className="hidden md:block">
-            <Button className="bg-orange-500 hover:bg-orange-600 text-white" onClick={() => setIsPopupOpen(true)}>
-              Keep in touch
-            </Button>
+          {/* Right side container for Buttons & Mobile Menu Toggle */}
+          <div className="flex items-center space-x-2">
+            <div className="hidden md:block">
+              <Button
+                className="bg-orange-500 hover:bg-orange-600 text-white"
+                onClick={() => setIsPopupOpen(true)}
+              >
+                Keep in touch
+              </Button>
+            </div>
 
-          {/* Auth Buttons / User Info */}
-          <div className="hidden md:flex items-center space-x-2 flex-shrink-0">
-            {status === "authenticated" ? (
-              <div className="flex items-center space-x-2">
-                {session.user?.image && (
-                  <Image
-                    src={session.user.image}
-                    alt={session.user.name || "User avatar"}
-                    width={32}
-                    height={32}
-                    className="rounded-full"
-                  />
-                )}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => signOut()}
-                  title="Sign Out"
-                  className="hover:text-orange-500"
-                >
-                  <LogOut size={20} />
-                </Button>
-              </div>
-            ) : status === "loading" ? (
-              <div className="w-8 h-8"></div>
-            ) : (
-              <Link href="/login">
-                <Button
-                  variant="outline"
-                  className="text-orange-500 border-orange-500 hover:bg-orange-50"
-                >
-                  <LogIn size={16} className="mr-2" />
-                  Login
-                </Button>
-              </Link>
-            )}
-          </div>
+            {/* Auth Buttons / User Info */}
+            <div className="hidden md:flex items-center space-x-2 flex-shrink-0">
+              {status === "authenticated" ? (
+                <div className="flex items-center space-x-2">
+                  {session.user?.image && (
+                    <Image
+                      src={session.user.image}
+                      alt={session.user.name || "User avatar"}
+                      width={32}
+                      height={32}
+                      className="rounded-full"
+                    />
+                  )}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => signOut()}
+                    title="Sign Out"
+                    className="hover:text-orange-500"
+                  >
+                    <LogOut size={20} />
+                  </Button>
+                </div>
+              ) : status === "loading" ? (
+                <div className="w-8 h-8"></div> // Placeholder for loading state
+              ) : (
+                <Link href="/login">
+                  <Button
+                    variant="outline"
+                    className="text-orange-500 border-orange-500 hover:bg-orange-50"
+                  >
+                    <LogIn size={16} className="mr-2" />
+                    Login
+                  </Button>
+                </Link>
+              )}
+            </div>
 
-          <button
-            className="md:hidden text-gray-700 hover:text-orange-500"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={isMobileMenuOpen}
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden text-gray-700 hover:text-orange-500"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isMobileMenuOpen}
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>{" "}
+          {/* End of Right side container */}
         </div>
       </div>
+
+      {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white shadow-lg">
           <nav className="container mx-auto px-4 py-4">
@@ -212,13 +219,10 @@ export default function Header() {
               )}
             </ul>
           </nav>
-        </div>)}
-      </div>
-      
-      <EmailPopup 
-        isOpen={isPopupOpen}
-        onClose={() => setIsPopupOpen(false)}
-      />
+        </div>
+      )}
+
+      <EmailPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
     </motion.header>
   );
 }
